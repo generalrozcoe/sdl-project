@@ -1,0 +1,3 @@
+/home/rozcoe/sdl project/CMakeFiles/sdl.dir
+/home/rozcoe/sdl project/CMakeFiles/edit_cache.dir
+/home/rozcoe/sdl project/CMakeFiles/rebuild_cache.dir

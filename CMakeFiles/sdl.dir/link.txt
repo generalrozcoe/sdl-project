@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/sdl.dir/main.cpp.o CMakeFiles/sdl.dir/snake.cpp.o -o sdl  -lSDL2 -lSDL2_image -lSDL2_ttf 
