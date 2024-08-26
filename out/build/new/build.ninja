@@ -49,17 +49,17 @@ cmake_ninja_workdir = /home/rozcoe/sdl$ project/out/build/new/
 
 build cmake_object_order_depends_target_sdl: phony || CMakeFiles/sdl.dir
 
-build CMakeFiles/sdl.dir/main.cpp.o: CXX_COMPILER__sdl_Debug /home/rozcoe/sdl$ project/main.cpp || cmake_object_order_depends_target_sdl
-  DEP_FILE = CMakeFiles/sdl.dir/main.cpp.o.d
+build CMakeFiles/sdl.dir/src/main.cpp.o: CXX_COMPILER__sdl_Debug /home/rozcoe/sdl$ project/src/main.cpp || cmake_object_order_depends_target_sdl
+  DEP_FILE = CMakeFiles/sdl.dir/src/main.cpp.o.d
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/sdl.dir
-  OBJECT_FILE_DIR = CMakeFiles/sdl.dir
+  OBJECT_FILE_DIR = CMakeFiles/sdl.dir/src
 
-build CMakeFiles/sdl.dir/snake.cpp.o: CXX_COMPILER__sdl_Debug /home/rozcoe/sdl$ project/snake.cpp || cmake_object_order_depends_target_sdl
-  DEP_FILE = CMakeFiles/sdl.dir/snake.cpp.o.d
+build CMakeFiles/sdl.dir/src/snake.cpp.o: CXX_COMPILER__sdl_Debug /home/rozcoe/sdl$ project/src/snake.cpp || cmake_object_order_depends_target_sdl
+  DEP_FILE = CMakeFiles/sdl.dir/src/snake.cpp.o.d
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/sdl.dir
-  OBJECT_FILE_DIR = CMakeFiles/sdl.dir
+  OBJECT_FILE_DIR = CMakeFiles/sdl.dir/src
 
 
 # =============================================================================
@@ -69,9 +69,9 @@ build CMakeFiles/sdl.dir/snake.cpp.o: CXX_COMPILER__sdl_Debug /home/rozcoe/sdl$ 
 #############################################
 # Link the executable sdl
 
-build sdl: CXX_EXECUTABLE_LINKER__sdl_Debug CMakeFiles/sdl.dir/main.cpp.o CMakeFiles/sdl.dir/snake.cpp.o
+build sdl: CXX_EXECUTABLE_LINKER__sdl_Debug CMakeFiles/sdl.dir/src/main.cpp.o CMakeFiles/sdl.dir/src/snake.cpp.o
   FLAGS = -g
-  LINK_LIBRARIES = -lSDL2  -lSDL2_image  -lSDL2_ttf
+  LINK_LIBRARIES = -lSDL2  -lSDL2_image  -lSDL2_ttf  -lfreeimage
   OBJECT_DIR = CMakeFiles/sdl.dir
   POST_BUILD = :
   PRE_LINK = :

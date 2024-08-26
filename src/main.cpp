@@ -1,4 +1,3 @@
-
 #include <string>
 #include <vector>
 #include <utility>
@@ -48,7 +47,7 @@ bool init()
     else
     {
         // Create window
-        gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        gWindow = SDL_CreateWindow("Snake", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL)
         {
             printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -81,16 +80,6 @@ bool init()
     }
     return success;
 }
-
-bool loadMedia()
-{
-    // Loading success flag
-    bool success = true;
-
-    
-    return success;
-}
-
 void close()
 {
     // Free loaded image
@@ -106,18 +95,6 @@ void close()
     // Quit SDL subsystems
     IMG_Quit();
     SDL_Quit();
-}
-
-SDL_Surface *loadSurface(std::string path)
-{
-    // Load image at specified path
-    SDL_Surface *loadedSurface = SDL_LoadBMP(path.c_str());
-    if (loadedSurface == NULL)
-    {
-        printf("Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-    }
-
-    return loadedSurface;
 }
 
 SDL_Texture *loadTexture(std::string path)
@@ -149,9 +126,6 @@ SDL_Texture *loadTexture(std::string path)
 
 int main(int argc, char *args[])
 {
-
-    snake Snake;
-
     // Start up SDL and create window
     if (!init())
     {
@@ -159,44 +133,34 @@ int main(int argc, char *args[])
     }
     else
     {
-        // Load media
-        if (!loadMedia())
-        {
-            printf("Failed to load media!\n");
-        }
-        else
-        {
 
-            // Main loop flag
-            bool quit = false;
-            // menu *selection;
-            // menu mainmenu;
-            // selection = &mainmenu;
-            //  Event handler
-            SDL_Event e;
-            snake game;
-            // While application is running
-            while (!quit)
+        // Main loop flag
+        bool quit = false;
+        // menu *selection;
+        // menu mainmenu;
+        // selection = &mainmenu;
+        //  Event handler
+        SDL_Event e;
+        snake game;
+        // While application is running
+        while (!quit)
+        {
+            // Handle events on queue
+            while (SDL_PollEvent(&e) != 0)
             {
-                // Handle events on queue
-                while (SDL_PollEvent(&e) != 0)
+                // User requests quit
+                if (e.type == SDL_QUIT)
                 {
-                    // User requests quit
-                    if (e.type == SDL_QUIT)
-                    {
-                        quit = true;
-                    }
-                    // User presses a key
+                    quit = true;
                 }
+                // User presses a key
+            }
 
+            game.run();
+        }
 
-                                game.run();            
+        close();
+
+        return 0;
     }
-
-    close();
-
-    return 0;
-}
-    }
-    
 }

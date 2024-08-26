@@ -8,6 +8,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "2dDrawn.hpp"
+
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 extern const Uint8 *currentKeyStates;
@@ -18,6 +19,8 @@ extern const Uint8 *currentKeyStates;
 class snake
 {
 public:
+    SDL_Rect background = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+
     std::pair<int, int> start = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
     std::pair<int, int> snakeSize = {10, 10};
     std::pair<int, int> move = {1, 0};
@@ -35,22 +38,20 @@ public:
         player.body.y = start.second;
         player.body.w = snakeSize.first;
         player.body.h = snakeSize.second;
-        
-        player.Renderer = gRenderer;
+
         player.color[0] = 255;
 
         player.color[2] = 255;
-         if(!snack.load("/assets/red.jpg")){
-            std::cout<<"stop"<<std::endl;
-         };
-                 sunLoc();
+        if (!snack.load("assets/diamond.png", gRenderer))
+        {
+            std::cout << "stop" << std::endl;
+        };
+        sunLoc();
 
         snack.viewport.w = sunSize.first;
         snack.viewport.h = sunSize.second;
 
-        snack.Renderer = gRenderer;
-        snack.color[0]=255;
-
+        snack.color[0] = 255;
     }
     void makeTail()
     {
@@ -82,7 +83,8 @@ public:
                 }
                 render();
                 go();
-                if (player.collision(snack))
+                std::cout << player.collision(&snack) << std::endl;
+                if (snack.collision(&player))
                 {
                     size += speed;
                     sunLoc();
@@ -92,7 +94,7 @@ public:
 
                 for (auto it = bones.begin(); it != bones.end(); ++it)
                 {
-                    if (player.collision((*it).second))
+                    if ((*it).second.collision(&player))
                     {
                         gameOver();
                     }
@@ -105,15 +107,15 @@ public:
     {
         SDL_RenderClear(gRenderer);
 
-        SDL_Rect background = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderFillRect(gRenderer, &background);
 
-        player.render();
-        snack.render();
+        player.render(gRenderer);
+        snack.render(gRenderer);
+
         for (auto it = bones.begin(); it != bones.end(); ++it)
         {
-            (*it).second.render();
+            (*it).second.render(gRenderer);
         }
         SDL_RenderPresent(gRenderer);
         SDL_UpdateWindowSurface(gWindow);
@@ -121,12 +123,12 @@ public:
 
     void sunLoc()
     {
-        snack.viewport.x = (SDL_GetTicks() % (SCREEN_WIDTH - 100)); 
+        snack.viewport.x = (SDL_GetTicks() % (SCREEN_WIDTH - 100));
         snack.viewport.y = (SDL_GetTicks() % (SCREEN_HEIGHT - 100));
         do
         {
-                    snack.viewport.x = (SDL_GetTicks() % (SCREEN_WIDTH - 100)); 
-        snack.viewport.y = (SDL_GetTicks() % (SCREEN_HEIGHT - 100));
+            snack.viewport.x = (SDL_GetTicks() % (SCREEN_WIDTH - 100));
+            snack.viewport.y = (SDL_GetTicks() % (SCREEN_HEIGHT - 100));
 
         } while (tailCollision());
         return;
@@ -192,7 +194,7 @@ public:
     {
         for (auto it = bones.begin(); it != bones.end(); ++it)
         {
-            if ((*it).second.collision( snack))
+            if ((*it).second.collision(&snack))
             {
                 return true;
             }

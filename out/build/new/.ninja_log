@@ -1,4 +1,19 @@
 # ninja log v5
-2	949	1723318407436478002	CMakeFiles/sdl.dir/snake.cpp.o	20a197ac77a8f1bb
-995	1085	1723318407568478005	sdl	91a815723491dc75
-2	995	1723318407480478003	CMakeFiles/sdl.dir/main.cpp.o	e57478d42dec1343
+4	1066	1724637816916814080	CMakeFiles/sdl.dir/src/main.cpp.o	42fdbc2cc725101f
+4	966	1724637816816814077	CMakeFiles/sdl.dir/src/snake.cpp.o	263d28bbfcd01de4
+1	1057	1724502608577495252	CMakeFiles/sdl.dir/main.cpp.o	e57478d42dec1343
+1021	1119	1724618394912337347	sdl	52631761837c84fe
+2	978	1724502608497495250	CMakeFiles/sdl.dir/snake.cpp.o	20a197ac77a8f1bb
+18	1091	1724705565926477049	CMakeFiles/sdl.dir/src/snake.cpp.o	263d28bbfcd01de4
+2	1153	1724705565986477050	CMakeFiles/sdl.dir/src/main.cpp.o	42fdbc2cc725101f
+2	1104	1724705613130478207	CMakeFiles/sdl.dir/src/snake.cpp.o	263d28bbfcd01de4
+2	1133	1724705613158478208	CMakeFiles/sdl.dir/src/main.cpp.o	42fdbc2cc725101f
+9	1018	1724705691770480138	CMakeFiles/sdl.dir/src/snake.cpp.o	263d28bbfcd01de4
+8	1088	1724705691842480139	CMakeFiles/sdl.dir/src/main.cpp.o	42fdbc2cc725101f
+2	945	1724705785170482430	CMakeFiles/sdl.dir/src/snake.cpp.o	263d28bbfcd01de4
+1	1034	1724705785258482432	CMakeFiles/sdl.dir/src/main.cpp.o	42fdbc2cc725101f
+1	1004	1724705952870486547	CMakeFiles/sdl.dir/src/snake.cpp.o	263d28bbfcd01de4
+1	1072	1724705952938486548	CMakeFiles/sdl.dir/src/main.cpp.o	42fdbc2cc725101f
+2	995	1724706000490487715	CMakeFiles/sdl.dir/src/snake.cpp.o	263d28bbfcd01de4
+2	1059	1724706000558487717	CMakeFiles/sdl.dir/src/main.cpp.o	42fdbc2cc725101f
+1059	1157	1724706000654487720	sdl	52631761837c84fe
