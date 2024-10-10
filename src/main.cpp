@@ -15,14 +15,9 @@ const Uint8 *currentKeyStates = SDL_GetKeyboardState(NULL);
 // Starts up SDL and creates window
 bool init();
 
-// Loads media
-bool loadMedia();
-
 // Frees media and shuts down SDL
 void close();
 
-// Loads individual image
-SDL_Surface *loadSurface(std::string path);
 // The window we'll be rendering to
 SDL_Window *gWindow = NULL;
 
@@ -96,34 +91,6 @@ void close()
     IMG_Quit();
     SDL_Quit();
 }
-
-SDL_Texture *loadTexture(std::string path)
-{
-    // The final texture
-    SDL_Texture *newTexture = NULL;
-
-    // Load image at specified path
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str());
-    if (loadedSurface == NULL)
-    {
-        printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-    }
-    else
-    {
-        // Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
-        if (newTexture == NULL)
-        {
-            printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-        }
-
-        // Get rid of old loaded surface
-        SDL_FreeSurface(loadedSurface);
-    }
-
-    return newTexture;
-}
-
 int main(int argc, char *args[])
 {
     // Start up SDL and create window
@@ -133,13 +100,8 @@ int main(int argc, char *args[])
     }
     else
     {
-
-        // Main loop flag
         bool quit = false;
-        // menu *selection;
-        // menu mainmenu;
-        // selection = &mainmenu;
-        //  Event handler
+
         SDL_Event e;
         snake game;
         // While application is running

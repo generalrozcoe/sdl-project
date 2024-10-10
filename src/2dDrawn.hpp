@@ -1,6 +1,6 @@
 #ifndef Drawn_hpp
 #define Drawn_hpp
-
+#include <math.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <utility>
@@ -42,24 +42,20 @@ public:
         rightB = B.x + B.w;
         topB = B.y;
         bottomB = B.y + B.h;
-        std::cout << bottomA << " " << topB << std::endl;
         if (bottomA <= topB)
         {
             return false;
         }
-        std::cout << topA << " " << bottomB << std::endl;
 
         if (topA >= bottomB)
         {
             return false;
         }
-        std::cout << rightA << " " << leftB << std::endl;
 
         if (rightA <= leftB)
         {
             return false;
         }
-        std::cout << leftA << " " << rightB << std::endl;
 
         if (leftA >= rightB)
         {
@@ -149,6 +145,72 @@ public:
     {
         return viewport;
     }
+};
+
+class circle : public D2
+{
+private:
+    int angleStart;
+    int angleEnd;
+
+public:
+    std::pair<int, int> location;
+    float size;
+    float angles;
+    std::map<float, std::pair<double, double>> edge;
+
+    circle() {};
+
+    void changeSize(float newSize)
+    {
+    }
+
+    void angleCount()
+    {
+        float temp = (1 / log(size));
+        angles = temp;
+        return;
+    }
+
+    void drawEdges()
+    {
+        for (float i = 0; i < 360; i += angles)
+        {
+            double x = location.first + (cos(i * (M_PI / 180))) * size;
+            double y = location.second + (sin(i * (M_PI / 180))) * size;
+            std::pair<double, double> temp = {x, y};
+            edge.insert({i, temp});
+        }
+    }
+
+    void render(SDL_Renderer *Renderer)
+    {
+        angleCount();
+        drawEdges();
+        for (float i = 0; i < 360; i += angles)
+        {
+            SDL_RenderDrawPoint(Renderer, edge[i].first, edge[i].second);
+        }
+    }
+};
+// bool collision(base2D A, base2D B){};
+// bool collision(base2D A, circle B ){};
+
+/*bool collision(circle A, circle B){
+    float distance = sqrt((( A.location.first - B.location.first)^2)+(A.location.second-B.location.second)^2);
+    float sin = asin(( A.location.first - B.location.first)/distance);
+    float cos = acos(( A.location.second - B.location.second)/distance);
+
+
+
+
+}*/
+
+class square : public D2
+{
+};
+class shape : public D2
+{
 };
 
 #endif
