@@ -3,9 +3,13 @@
 #include <math.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
 #include <utility>
 #include <iostream>
 #include <map>
+#include <vector>
+
 #include <FreeImage.h>
 
 extern const int SCREEN_WIDTH;
@@ -19,9 +23,7 @@ public:
     int color[4];
 
     SDL_Rect viewport;
-    virtual bool collision(base2D *other)
-    {
-
+    virtual bool collision(base2D *other){
         // The sides of the rectangles
         int leftA, leftB;
         int rightA, rightB;
@@ -64,13 +66,16 @@ public:
         // If none of the sides from A are outside B
         return true;
     }
-    virtual void render() {};
-    virtual SDL_Rect location() {};
+    virtual void render(SDL_Renderer *Render) {};
+    virtual SDL_Rect location() {
+    };
 };
 
 class D2 : public base2D
 {
 public:
+typedef std::pair<int, int> location;
+
     D2()
     {
         body = {0, 0, 0, 0};
@@ -91,6 +96,17 @@ public:
     SDL_Rect location()
     {
         return body;
+    }
+
+    void move(float x, float y)
+    {
+        body.x += x;
+        body.y += y;
+    }
+    void set(float x, float y)
+    {
+        body.x = x;
+        body.y = y;
     }
 };
 
@@ -114,9 +130,9 @@ public:
 
         FREE_IMAGE_FORMAT filetype = FreeImage_GetFileType(path.data(), 0);
         FIBITMAP *freeimage_bitmap = FreeImage_Load(filetype, path.data(), 0);
-        std::cout << filetype << std::endl;
+        // std::cout << filetype << std::endl;
         FreeImage_FlipVertical(freeimage_bitmap);
-        std::cout << SDL_GetError() << std::endl;
+        // std::cout << SDL_GetError() << std::endl;
 
         SDL_Surface *loadedSurface = SDL_CreateRGBSurfaceFrom(
             FreeImage_GetBits(freeimage_bitmap),
@@ -129,11 +145,11 @@ public:
             FreeImage_GetBlueMask(freeimage_bitmap),
             0);
 
-        std::cout << SDL_GetError() << std::endl;
+        // std::cout << SDL_GetError() << std::endl;
 
-        media = SDL_CreateTextureFromSurface(Renderer, loadedSurface);
+        // media = SDL_CreateTextureFromSurface(Renderer, loadedSurface);
 
-        std::cout << SDL_GetError() << std::endl;
+        // std::cout << SDL_GetError() << std::endl;
         return true;
     }
     void render(SDL_Renderer *Renderer)
@@ -145,6 +161,21 @@ public:
     {
         return viewport;
     }
+    void scale(float scale)
+    {
+        viewport.w *= scale;
+        viewport.h *= scale;
+    }
+    void move(float x, float y)
+    {
+        viewport.x += x;
+        viewport.y += y;
+    }
+    void set(float x, float y)
+    {
+        viewport.x = x;
+        viewport.y = y;
+    }
 };
 
 class circle : public D2
@@ -154,7 +185,7 @@ private:
     int angleEnd;
 
 public:
-    std::pair<int, int> location;
+    location location;
     float size;
     float angles;
     std::map<float, std::pair<double, double>> edge;
@@ -193,24 +224,141 @@ public:
         }
     }
 };
-// bool collision(base2D A, base2D B){};
-// bool collision(base2D A, circle B ){};
 
-/*bool collision(circle A, circle B){
-    float distance = sqrt((( A.location.first - B.location.first)^2)+(A.location.second-B.location.second)^2);
-    float sin = asin(( A.location.first - B.location.first)/distance);
-    float cos = acos(( A.location.second - B.location.second)/distance);
-
-
-
-
-}*/
 
 class square : public D2
 {
 };
 class shape : public D2
 {
+public:
+typedef std::pair<int, int> location;
+
+    location origin;
+    int size;
+    int shapeType;
+    std::vector<location> points;
+    std::vector<location,location> lines;
+    float offset;
+
+    shape()
+    {
+        origin = {0, 0};
+        size = 0;
+        shapeType = 0;
+        offset = 0;
+    }
+    void setAll(int locX, int locY, float off, int sides, int newSize)
+    {
+        origin.first = locX;
+        origin.second = locY;
+        offset = off;
+        shapeType = sides;
+        size = newSize;
+        findPoints();
+    }
+    void shift(int X, int Y)
+    {
+        origin.first += X;
+        origin.second += Y;
+    }
+
+    void changeOffset(int change)
+    {
+        offset += change;
+    }
+    void changeSize(int change)
+    {
+        size += change;
+    }
+    void changeShape(int change)
+    {
+        shapeType += change;
+    }
+    void findPoints()
+    {
+        points.clear();
+        for (float i = 0; i < 360; i += (360 / shapeType))
+        {
+            double x = origin.first + (cos((i + offset) * (M_PI / 180))) * size;
+            double y = origin.second + (sin((i + offset) * (M_PI / 180))) * size;
+            std::pair<double, double> temp = {x, y};
+            points.emplace_back(temp);
+        }
+    }
+    void drawLines()
+    {
+        lines.clear();
+        for (auto it = points.begin(); it != points.end(); ++it)
+        {
+            if ((it) == points.begin())
+            {
+                lines.emplace_back(points.back(), (*it));
+            }
+            else
+            {
+                lines.emplace_back((*(it - 1), (*it)));
+            }
+        }
+    }
+    void render(SDL_Renderer *Render){
+        for (auto it = lines.begin(); it != lines.end(); ++it){
+
+
+        SDL_RenderDrawLine(Render, (*it).first.first+origin.first, (*it).first.second+origin.second, (*it).second.first +origin.first, (*it).second.second.second+origin.second
+        );
+    }
+    }
+};
+
+class text : public image
+{
+private:
+public:
+    static inline std::map<std::string, TTF_Font *> fonts;
+
+    std::string string;
+    SDL_Texture *media;
+    TTF_Font *font;
+    SDL_Color color;
+
+    text()
+    {
+
+        color.r = 255;
+        color.g = 255;
+        color.b = 255;
+        color.a = 255;
+    }
+    static void load(std::string location)
+    {
+        std::string name = location.substr(location.find("FONT-") + 5);
+        TTF_Font *temp = TTF_OpenFont(location.data(), 24);
+        fonts.emplace(name, temp);
+
+        return;
+    }
+
+    void updateString(std::string newtext, SDL_Renderer *Renderer)
+    {
+        string = newtext;
+        SDL_Surface *temp = TTF_RenderText_Solid(font, string.c_str(), color);
+        media = SDL_CreateTextureFromSurface(Renderer, temp);
+    }
+    void render(SDL_Renderer *Renderer)
+    {
+
+        SDL_RenderCopy(Renderer, media, NULL, &viewport);
+    }
+    void setFont(std::string set)
+    {
+        font = fonts.at(set);
+    }
+    SDL_Rect location()
+    {
+        return viewport;
+    }
 };
 
 #endif
+
